@@ -11,18 +11,20 @@ class Register_2ViewController: UIViewController {
     @IBOutlet var c_password: UITextField!
     var email_r: String = ""
     var sex:String = "Mujer"
+    @IBOutlet var actIndicator: UIActivityIndicatorView!
+    @IBOutlet var Register_button: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.actIndicator.hidesWhenStopped = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    // MARK: - DatePicker
-    @IBAction func birthdate(sender: AnyObject) {
-        
+    // MARK: - DatePicker    
+    @IBAction func edit_birthdate(sender: AnyObject) {
         DatePickerDialog().show("BirthDate", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .Date) {
             (date) -> Void in
             var fecha_c = [String]()
@@ -30,9 +32,6 @@ class Register_2ViewController: UIViewController {
             fecha_c = date.componentsSeparatedByString(" ")
             self.birthd.text = fecha_c[0]
         }
-    }
-    @IBAction func edit_birthdate(sender: AnyObject) {
-        birthdate(sender)
     }
     
     // MARK: - Selection Sex
@@ -51,6 +50,10 @@ class Register_2ViewController: UIViewController {
     
     // MARK: - Register
     @IBAction func Register(sender: AnyObject) {
+        
+        actIndicator.startAnimating()
+        Register_button.hidden = true
+        
         let c_name = completename.text
         let birth = birthd.text
         let user = username.text
@@ -63,6 +66,8 @@ class Register_2ViewController: UIViewController {
             let alert:UIAlertController = UIAlertController(title: "Warning", message: "Please fill all fields.", preferredStyle: UIAlertControllerStyle.Alert)
             let actionOK:UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
             alert.addAction(actionOK)
+            actIndicator.stopAnimating()
+            Register_button.hidden = false
             presentViewController(alert, animated: true, completion: nil)
         
         }else if (pass?.utf16.count < 4){
@@ -75,6 +80,8 @@ class Register_2ViewController: UIViewController {
                     self.password.becomeFirstResponder()
                 }
                 alert.addAction(actionOK)
+                actIndicator.stopAnimating()
+                Register_button.hidden = false
                 presentViewController(alert, animated: true, completion: nil)
             
         }else if ( pass != c_pass ){
@@ -86,9 +93,11 @@ class Register_2ViewController: UIViewController {
                     self.password.becomeFirstResponder()
                 }
                 alert.addAction(actionOK)
+                actIndicator.stopAnimating()
+                Register_button.hidden = false
                 presentViewController(alert, animated: true, completion: nil)
             }else{
-    
+            
             let user = PFUser()
             
             user.username = self.username.text
@@ -97,6 +106,7 @@ class Register_2ViewController: UIViewController {
             user["name"] = self.completename.text
             user["sex"] = self.sex
             user["b_date"] = self.birthd.text
+            
             
             user.signUpInBackgroundWithBlock{(succeeded: Bool, error: NSError?) -> Void in
             
@@ -113,16 +123,21 @@ class Register_2ViewController: UIViewController {
                             self.username.becomeFirstResponder()
                         }
                         alert.addAction(actionOK)
+                        self.actIndicator.stopAnimating()
+                        self.Register_button.hidden = false
                         self.presentViewController(alert, animated: true, completion: nil)
                     }else{
                         print("Error en registro")
                         let alert:UIAlertController = UIAlertController(title: "Error", message: "I didn`t register, Try again.", preferredStyle: UIAlertControllerStyle.Alert)
                         let actionOK:UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
                         alert.addAction(actionOK)
+                        self.actIndicator.stopAnimating()
+                        self.Register_button.hidden = false
                         self.presentViewController(alert, animated: true, completion: nil)
                     }
                     
                 }else{
+                    self.actIndicator.stopAnimating()
                     
                     self.performSegueWithIdentifier("register_ok", sender: self)
                 }

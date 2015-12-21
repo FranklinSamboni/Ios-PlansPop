@@ -20,6 +20,8 @@ struct Plan{
     var image:PFFile!
     var geoPoint:PFGeoPoint!
     
+    var id_Plan:String!
+    
     init (title:String, descripcion:String, date:String, place:String, image:PFFile, assist:Int32, geoPoint: PFGeoPoint) {
         
         self.title = title
@@ -42,6 +44,13 @@ struct Plan{
         self.assist = assist
         
         
+    }
+    init (title:String, descripcion:String) {
+    
+    self.title = title
+    self.descripcion = descripcion    
+    
+    
     }
     
     init () {

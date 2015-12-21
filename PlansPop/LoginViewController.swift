@@ -13,13 +13,16 @@ class LoginViewController: UIViewController {
     @IBOutlet var Image: UIImageView!
     @IBOutlet var user: UITextField!
     @IBOutlet var pass: UITextField!
+    @IBOutlet var actIndicator: UIActivityIndicatorView!
+    @IBOutlet var login_button: UIButton!
+    
+    //var actInd: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150)) as UIActivityIndicatorView
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
         
-        
-        
+        self.actIndicator.hidesWhenStopped = true
     
         // Do any additional setup after loading the view.
     }
@@ -45,6 +48,9 @@ class LoginViewController: UIViewController {
     */
     @IBAction func login(sender: AnyObject) {
         
+        login_button.hidden = true
+        
+        actIndicator.startAnimating()
         let username = self.user.text
         let password = self.pass.text
         
@@ -55,7 +61,9 @@ class LoginViewController: UIViewController {
             let actionOK:UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
             
             alert.addAction(actionOK)
+            actIndicator.stopAnimating()
             
+            login_button.hidden = false
             presentViewController(alert, animated: true, completion: nil)
             
             
@@ -64,6 +72,8 @@ class LoginViewController: UIViewController {
             PFUser.logInWithUsernameInBackground(username!, password: password!, block: {(user, error) -> Void in
             
                 if ((user) != nil){
+                    self.actIndicator.stopAnimating()
+                   
                     
                     self.performSegueWithIdentifier("index", sender: self)
                 
@@ -74,7 +84,9 @@ class LoginViewController: UIViewController {
                     let actionOK:UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
                     
                     alert.addAction(actionOK)
+                    self.actIndicator.stopAnimating()
                     
+                    self.login_button.hidden = false
                     self.presentViewController(alert, animated: true, completion: nil)
                 
                     

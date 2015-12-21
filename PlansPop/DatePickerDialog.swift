@@ -15,7 +15,7 @@ class DatePickerDialog: UIView {
     typealias DatePickerCallback = (date: NSDate) -> Void
     
     /* Consts */
-    private let kDatePickerDialogDefaultButtonHeight:       CGFloat = 50
+    private let kDatePickerDialogDefaultButtonHeight:       CGFloat = 30
     private let kDatePickerDialogDefaultButtonSpacerHeight: CGFloat = 1
     private let kDatePickerDialogCornerRadius:              CGFloat = 7
     private let kDatePickerDialogDoneButtonTag:             Int     = 1
@@ -130,8 +130,8 @@ class DatePickerDialog: UIView {
     private func createContainerView() -> UIView {
         let screenSize = countScreenSize()
         let dialogSize = CGSizeMake(
-            300,
-            230
+            260,
+            130
                 + kDatePickerDialogDefaultButtonHeight
                 + kDatePickerDialogDefaultButtonSpacerHeight)
         
@@ -168,14 +168,17 @@ class DatePickerDialog: UIView {
         // ˆˆˆ
         
         //Title
-        self.titleLabel = UILabel(frame: CGRectMake(10, 10, 280, 30))
+        self.titleLabel = UILabel(frame: CGRectMake(80, 10, 100, 20))
         self.titleLabel.textAlignment = NSTextAlignment.Center
         self.titleLabel.font = UIFont.boldSystemFontOfSize(17)
         dialogContainer.addSubview(self.titleLabel)
         
-        self.datePicker = UIDatePicker(frame: CGRectMake(0, 30, 0, 0))
-        self.datePicker.autoresizingMask = UIViewAutoresizing.FlexibleRightMargin
-        self.datePicker.frame.size.width = 300
+        
+        self.datePicker = UIDatePicker(frame: CGRectMake(0, 20, 0, 20))
+        //self.datePicker.autoresizingMask = UIViewAutoresizing.contains(UIViewAutoresizing.)
+        self.datePicker.frame.size.width = 250
+        self.datePicker.frame.size.height = 100
+        
         dialogContainer.addSubview(self.datePicker)
         
         // Add the buttons

@@ -16,15 +16,22 @@ class AddViewController: UIViewController, UINavigationControllerDelegate, UIIma
     @IBOutlet weak var AddImg: UIImageView!
     @IBOutlet weak var Add_name: UITextField!
     @IBOutlet weak var Add_description: UITextField!
-    @IBOutlet weak var dateTime: UIDatePicker!
     
+    @IBOutlet var dateTime_Field: UITextField!
     
+    var date_time:String = ""
     var plan =  Plan()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.navigationItem.hidesBackButton = true
+        //self.navigationController?.navigationItem.hidesBackButton = true
         // Do any additional setup after loading the view.
+    }
+    override func viewWillAppear(animated: Bool) {
+        self.navigationItem.hidesBackButton = true
+        //self.navigationController?.navigationItem.hidesBackButton = true
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -37,16 +44,12 @@ class AddViewController: UIViewController, UINavigationControllerDelegate, UIIma
         
         let nombre = Add_name.text
         let descripcion = Add_description.text
-        
-        let dateFormat = NSDateFormatter()
-        dateFormat.dateFormat = "dd/MM/YYYY HH:mm a"
-        let strDate = dateFormat.stringFromDate(dateTime.date)
-        print(strDate)
+        let date = dateTime_Field.text
         
         
         if nombre!.isEmpty || descripcion!.isEmpty
         {
-            let alert:UIAlertController = UIAlertController(title: "Informacion", message: "Todos los campos son requeridos", preferredStyle: UIAlertControllerStyle.Alert)
+            let alert:UIAlertController = UIAlertController(title: "Information", message: "All fields are required.", preferredStyle: UIAlertControllerStyle.Alert)
             
             let actionOK:UIAlertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
             
@@ -65,7 +68,7 @@ class AddViewController: UIViewController, UINavigationControllerDelegate, UIIma
             
             plan.title = nombre
             plan.descripcion = descripcion
-            plan.date = strDate
+            plan.date = date
             plan.geoPoint = geoPoint
             plan.image = imgParseFile
             
@@ -124,5 +127,32 @@ class AddViewController: UIViewController, UINavigationControllerDelegate, UIIma
         // Pass the selected object to the new view controller.
     }
     
+    @IBAction func cancel_add(sender: AnyObject) {
+        let alert:UIAlertController = UIAlertController(title: "Warnning", message: "Exit create plan.", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let actionOK:UIAlertAction = UIAlertAction(title: "Accept", style: UIAlertActionStyle.Default){(UIAlertAction) -> Void in
+            self.performSegueWithIdentifier("cancel_add", sender: self)
+        }
+        let actionCancel:UIAlertAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil)
+        
+        alert.addAction(actionOK)
+        alert.addAction(actionCancel)
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
     
+    @IBAction func date_time(sender: AnyObject) {
+        DatePickerDialog().show("Date Time", doneButtonTitle: "Done", cancelButtonTitle: "Cancel", datePickerMode: .DateAndTime) {
+            (date) -> Void in
+            let dateFormat = NSDateFormatter()
+            dateFormat.dateFormat = "dd/MM/YYYY HH:mm a"
+            let strDate = dateFormat.stringFromDate(date)
+            var fecha_c = [String]()
+            let date = String(strDate)
+            fecha_c = date.componentsSeparatedByString(" ")
+            self.dateTime_Field.text = fecha_c[0] + " " + fecha_c[1] + " " + fecha_c[2]
+            self.date_time = fecha_c[0] + " " + fecha_c[1] + " " + fecha_c[2]
+        }
+
+    }
 }
